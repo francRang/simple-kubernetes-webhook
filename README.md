@@ -59,6 +59,13 @@ kube-proxy-4h6sj                             1/1     Running   0          3m40s
 kube-scheduler-kind-control-plane            1/1     Running   0          3m54s
 ```
 
+### Generate Self-Signed Certificates
+
+The certificates the pre-populated Kubernetes secret defined under `/dev/manifests/webhook/webhook.tls.secret.yaml` are already expired. To fix this, you will need to run the script to re-generate them. Simply go to the `/dev/` ( `cd dev/`) directory and from there, run the shell script which generates the secrets with the correct service name already defined. This will update the `webhook.tls.secret.yaml` file with the encoded version of the newly and valid certificates.
+
+You will notice that the script will output the caBundle. Copy everything after the `>> MutatingWebhookConfiguration caBundle:` to the `==` (include the doble equal signs). Paste this into the caBundle field for the `mutating.config.yaml` file under `dev/manifests/cluster-config/mutating.config.yaml`. Make sure to indent it correctly (All the way to the letter 'B' in "caBundle"). Do the same thing for the file `validating.config.yaml`
+Once this is done, go back one directory `cd ..`.
+
 ### Deploy Admission Webhook
 To configure the cluster to use the admission webhook and to deploy said webhook, simply run:
 ```
